@@ -29,3 +29,5 @@ export interface ButtonProps {
     disabled?: boolean;
     variant?: "primary" | "danger" | "outline";
 }
+
+export type FieldErrors = { email?: string; password?: string };
