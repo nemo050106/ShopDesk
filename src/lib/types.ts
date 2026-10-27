@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export interface Product {
   _id: string; // MongoDB id, not a number
   name: string;
@@ -17,4 +19,10 @@ export interface InventorySummary {
   activeProducts: number;
   outOfStock: number;
   totalStockValue: number;
+}
+
+
+export interface ButtonProps {
+  onClick?: () => void;
+  children: ReactNode;
 }

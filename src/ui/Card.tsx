@@ -1,7 +1,15 @@
+'use client'
 import { Product } from "@/lib/types";
 import { formatPrice } from "@/lib/product-utils";
+import Button from "./Button";
+import { useRouter } from "next/navigation";
 
 export default function Card({ product }: { product: Product }) {
+    const router = useRouter()
+
+    const viewDetails = () => {
+        router.push(`/details/${product._id}`)
+    }
     return (
         <div className="group flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
             {/* Image + badges */}
@@ -41,14 +49,15 @@ export default function Card({ product }: { product: Product }) {
                 <div className="mt-auto flex items-center justify-between border-t border-gray-100 pt-3 text-xs">
                     <span className="text-gray-500">{product.stock} in stock</span>
                     <span
-                        className={`flex items-center gap-1.5 font-medium ${
-                            product.isActive ? "text-emerald-600" : "text-gray-400"
-                        }`}
+                        className={`flex items-center gap-1.5 font-medium ${product.isActive ? "text-emerald-600" : "text-gray-400"
+                            }`}
                     >
                         <span className="h-1.5 w-1.5 rounded-full bg-current" />
                         {product.isActive ? "Active" : "Inactive"}
                     </span>
                 </div>
+                <Button onClick={viewDetails}>Details</Button>
+
             </div>
         </div>
     );

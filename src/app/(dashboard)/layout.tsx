@@ -24,7 +24,7 @@ export default async function DashboardLayout({
                 <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b bg-white/80 px-6 backdrop-blur">
                     <p className="text-sm text-gray-500">
                         Welcome back,{" "}
-                        <span className="font-semibold text-gray-900">{firstName}</span> 👋
+                        <span className="font-semibold text-gray-900">{firstName}</span> 
                     </p>
 
                     <div className="flex items-center gap-3">
