@@ -23,6 +23,9 @@ export interface InventorySummary {
 
 
 export interface ButtonProps {
-  onClick?: () => void;
-  children: ReactNode;
+    children: ReactNode;
+    onClick?: () => void;
+    type?: "button" | "submit";
+    disabled?: boolean;
+    variant?: "primary" | "danger" | "outline";
 }

@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { formatPrice } from "@/lib/product-utils";
 import getProductById from "@/lib/productDetails";
+import DeleteButton from "@/ui/DeleteButton";
 
 export default async function Details({
     params,
@@ -29,8 +30,8 @@ export default async function Details({
         product.stock === 0
             ? { label: "Out of stock", style: "bg-rose-50 text-rose-700 border-rose-200" }
             : product.stock <= 10
-              ? { label: `Low stock: only ${product.stock} left`, style: "bg-amber-50 text-amber-700 border-amber-200" }
-              : { label: `In stock: ${product.stock} units available`, style: "bg-emerald-50 text-emerald-700 border-emerald-200" };
+                ? { label: `Low stock: only ${product.stock} left`, style: "bg-amber-50 text-amber-700 border-amber-200" }
+                : { label: `In stock: ${product.stock} units available`, style: "bg-emerald-50 text-emerald-700 border-emerald-200" };
 
     // One object per detail box, so the markup is written only once below
     const details = [
@@ -94,9 +95,8 @@ export default async function Details({
 
                     {/* Active / Inactive badge on the image */}
                     <span
-                        className={`absolute left-6 top-6 flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1.5 text-xs font-semibold shadow backdrop-blur ${
-                            product.isActive ? "text-emerald-600" : "text-gray-500"
-                        }`}
+                        className={`absolute left-6 top-6 flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1.5 text-xs font-semibold shadow backdrop-blur ${product.isActive ? "text-emerald-600" : "text-gray-500"
+                            }`}
                     >
                         <span className="h-2 w-2 rounded-full bg-current" />
                         {product.isActive ? "Active" : "Inactive"}
@@ -164,6 +164,8 @@ export default async function Details({
                             <Pencil size={16} />
                             Edit product
                         </Link>
+
+                        <DeleteButton id={product._id} name={product.name} />
 
                         <Link
                             href="/dashboard/products"
