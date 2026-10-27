@@ -2,17 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Eye, EyeOff } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { loginSchema } from "@/lib/validation";
 import PasswordInput from "@/ui/PasswordInput";
 import { FieldErrors } from "@/lib/types";
 
-
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [showPassword, setShowPassword] = useState(false);
 
     const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
     const [serverError, setServerError] = useState("");
@@ -28,41 +25,43 @@ export default function LoginPage() {
         if (!result.success) {
             const errors: FieldErrors = {};
 
-            // Keep the first message for each field
+            // Keep the first error message for each field
             for (const issue of result.error.issues) {
                 const field = issue.path[0] as keyof FieldErrors;
                 if (!errors[field]) errors[field] = issue.message;
             }
 
             setFieldErrors(errors);
-            return; // stop here, the inputs are not valid
+            return; // Stop execution if inputs are invalid
         }
 
         setFieldErrors({});
         setLoading(true);
 
-        // 2. Inputs are valid, so sign in
+        // 2. Inputs are valid, so attempt sign in
         const { error } = await authClient.signIn.email({
             email: result.data.email,
             password: result.data.password,
-            callbackURL: "/", // Redirects here after successful login
+            callbackURL: "/", // Redirect after successful login
         });
 
         setLoading(false);
 
-        // 3. Wrong password, unknown email, etc.
+        // 3. Handle server authentication errors
         if (error) {
             setServerError(error.message ?? "Invalid email or password.");
         }
     };
 
     const inputClass = (hasError: boolean) =>
-        `mt-1 w-full rounded-md border px-3 py-2 text-sm text-black ${hasError ? "border-red-500" : "border-gray-300"
+        `mt-1 w-full rounded-md border bg-white px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 ${
+            hasError
+                ? "border-red-500 focus:ring-red-200"
+                : "border-gray-300 focus:ring-blue-500"
         }`;
 
     return (
-        <div className="flex min-h-[80vh] items-center justify-center">
-            {/* noValidate turns off the browser's own popups so zod's messages show instead */}
+        <div className="flex min-h-[80vh] items-center justify-center px-4">
             <form
                 onSubmit={handleSignIn}
                 noValidate
@@ -72,7 +71,7 @@ export default function LoginPage() {
                     Sign In to ShopDesk
                 </h1>
 
-                {/* Email */}
+                {/* Email Field */}
                 <div className="mb-4">
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                         Email
@@ -81,6 +80,7 @@ export default function LoginPage() {
                         id="email"
                         type="email"
                         autoComplete="email"
+                        placeholder="you@example.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className={inputClass(!!fieldErrors.email)}
@@ -90,40 +90,31 @@ export default function LoginPage() {
                     )}
                 </div>
 
-                {/* Password with show/hide toggle */}
+                {/* Password Field (Uses encapsulated show/hide toggle) */}
                 <div className="mb-6">
                     <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                         Password
                     </label>
-                    <div className="relative">
-                        <PasswordInput
-                            id="password"
-                            autoComplete="current-password"
-                            value={password}
-                            onChange={setPassword}
-                            hasError={!!fieldErrors.password}
-                        />
-                        <button
-                            type="button"
-                            onClick={() => setShowPassword((prev) => !prev)}
-                            aria-label={showPassword ? "Hide password" : "Show password"}
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                        >
-                            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                        </button>
-                    </div>
+                    <PasswordInput
+                        id="password"
+                        autoComplete="current-password"
+                        value={password}
+                        onChange={setPassword}
+                        hasError={!!fieldErrors.password}
+                    />
                     {fieldErrors.password && (
                         <p className="mt-1 text-xs text-red-600">{fieldErrors.password}</p>
                     )}
                 </div>
 
-                {/* Error from the server */}
+                {/* Server Error Display */}
                 {serverError && (
                     <p className="mb-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-600">
                         {serverError}
                     </p>
                 )}
 
+                {/* Submit Button */}
                 <button
                     type="submit"
                     disabled={loading}
