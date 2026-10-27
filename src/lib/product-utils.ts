@@ -27,6 +27,20 @@ export const filterByCategory = (products: Product[], category: string) => {
   );
 };
 
+// Keep products between min and max price. An empty box means "no limit".
+export const filterByPrice = (
+  products: Product[],
+  min: string,
+  max: string,
+) => {
+  const minPrice = min === "" ? 0 : Number(min);
+  const maxPrice = max === "" ? Infinity : Number(max);
+
+  return products.filter(
+    (product) => product.price >= minPrice && product.price <= maxPrice,
+  );
+};
+
 // Build the category dropdown from real data instead of a hardcoded list
 export const getCategories = (products: Product[]): string[] => [
   "All",
